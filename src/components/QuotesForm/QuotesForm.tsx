@@ -12,7 +12,7 @@ const initialState = {
 
 interface QuotesFormProps {
     quoteToEdit?: IQuotesForm;
-    idQuote?: string;
+    idQuote: string;
 }
 
 const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, idQuote}) => {
@@ -85,6 +85,7 @@ const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, idQuote}) => {
                                 value={form.category}
                                 onChange={onSelectChange}
                                 displayEmpty
+                                required
                             >
                                 <MenuItem value="" disabled>
                                     Select category
