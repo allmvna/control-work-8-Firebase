@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import {IQuotesForm} from "../../types";
 
 const initialState = {
-    title: "",
+    author: "",
     description: "",
     category: "",
 };
@@ -81,10 +81,10 @@ const QuotesForm = () => {
                                     borderRadius: "10px",
                                 }}
                                 id="outlined-basic"
-                                label="Title"
+                                label="Author"
                                 variant="outlined"
-                                name="title"
-                                value={form.title}
+                                name="author"
+                                value={form.author}
                                 onChange={onChangeField}
                                 required
                             />
