@@ -2,13 +2,13 @@ import {Button, MenuItem, Select, SelectChangeEvent, TextField, Typography} from
 import Grid from "@mui/material/Grid2";
 import React, {useState} from "react";
 import {IQuotesForm} from "../../types";
+import axiosAPI from "../../axiosAPI.ts";
 
 const initialState = {
     author: "",
     description: "",
     category: "",
 };
-
 
 const QuotesForm = () => {
     const [form, setForm] = useState<IQuotesForm>(initialState);
@@ -28,12 +28,17 @@ const QuotesForm = () => {
         }));
     };
 
-    const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(form);
-        setForm(initialState);
-    };
 
+        try {
+            const postData = { ...form };
+            await axiosAPI.post('quotes.json', postData);
+            setForm(initialState);
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     return (
         <>
