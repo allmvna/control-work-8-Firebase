@@ -2,6 +2,7 @@ import {Button, MenuItem, Select, SelectChangeEvent, TextField, Typography} from
 import Grid from "@mui/material/Grid2";
 import React, {useEffect, useState} from "react";
 import {IQuotesForm} from "../../types";
+import axiosAPI from "../../axiosAPI.ts";
 
 const initialState = {
     author: "",
@@ -11,10 +12,10 @@ const initialState = {
 
 interface QuotesFormProps {
     quoteToEdit?: IQuotesForm;
-    submitForm:  (quote: IQuotesForm) => Promise<void>;
+    idQuote?: string;
 }
 
-const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, submitForm}) => {
+const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, idQuote}) => {
     const [form, setForm] = useState<IQuotesForm>({...initialState});
 
     useEffect(() => {
@@ -41,11 +42,16 @@ const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, submitForm}) => {
         }));
     };
 
+
     const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            await submitForm(form);
+            if (idQuote) {
+                await axiosAPI.put(`quotes/${idQuote}.json`, form);
+            } else {
+                await axiosAPI.post("quotes.json", form);
+            }
             setForm(initialState);
         } catch (error) {
             console.error(error);

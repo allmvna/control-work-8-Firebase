@@ -1,19 +1,16 @@
-import QuotesForm from "../QuotesForm/QuotesForm.tsx";
-import {IQuote, IQuotesForm} from "../../types";
-import {useParams} from "react-router-dom";
-import {useCallback, useEffect, useState} from "react";
-import axiosAPI from "../../axiosAPI.ts";
+import QuotesForm from "../QuotesForm/QuotesForm";
+import { IQuote } from "../../types";
+import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import axiosAPI from "../../axiosAPI";
 
 const EditQuote = () => {
     const [quote, setQuote] = useState<IQuote>();
-    const params = useParams<{ idQuote: string }>();
-
+    const { idQuote } = useParams<{ idQuote: string }>();
 
     const fetchOneQuote = useCallback(async (id: string) => {
         try {
-            const response: { data: IQuote } = await axiosAPI<IQuote>(
-                `quotes/${id}.json`,
-            );
+            const response = await axiosAPI.get<IQuote>(`quotes/${id}.json`);
             if (response.data) {
                 setQuote(response.data);
             }
@@ -22,25 +19,13 @@ const EditQuote = () => {
         }
     }, []);
 
-
     useEffect(() => {
-        if (params.idQuote) {
-            void fetchOneQuote(params.idQuote);
+        if (idQuote) {
+            void fetchOneQuote(idQuote);
         }
-    }, [params.idQuote, fetchOneQuote]);
+    }, [idQuote, fetchOneQuote]);
 
-    const submitForm = async (quoteData: IQuotesForm) => {
-        try {
-            await axiosAPI.put(`quotes/${params.idQuote}.json`, quoteData);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    return quote && (
-        <>
-            <QuotesForm quoteToEdit = {quote} submitForm={submitForm}/>
-        </>
-    );
+    return <QuotesForm quoteToEdit={quote} idQuote={idQuote} />;
 };
 
 export default EditQuote;
