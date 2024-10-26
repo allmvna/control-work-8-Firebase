@@ -14,7 +14,7 @@ const Quotes = () => {
                 <Routes>
                     <Route path="/" element={<QuotesList/>}/>
                     <Route path="/quotes" element={<QuotesList/>}/>
-                    <Route path="/posts" element={<NewQuotes/>}/>
+                    <Route path="/add-quotes" element={<NewQuotes/>}/>
                 </Routes>
             </Container>
         </>
