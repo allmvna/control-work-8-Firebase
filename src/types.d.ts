@@ -13,9 +13,6 @@ export interface IQuote{
 
 export interface IQuoteAPI {
     [id: string]: IQuote;
-    author: string;
-    description: string;
-    category: string;
 }
 
 

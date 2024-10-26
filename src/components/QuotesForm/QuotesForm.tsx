@@ -1,8 +1,7 @@
 import {Button, MenuItem, Select, SelectChangeEvent, TextField, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IQuotesForm} from "../../types";
-import axiosAPI from "../../axiosAPI.ts";
 
 const initialState = {
     author: "",
@@ -10,8 +9,22 @@ const initialState = {
     category: "",
 };
 
-const QuotesForm = () => {
-    const [form, setForm] = useState<IQuotesForm>(initialState);
+interface QuotesFormProps {
+    quoteToEdit?: IQuotesForm;
+    submitForm:  (quote: IQuotesForm) => Promise<void>;
+}
+
+const QuotesForm: React.FC<QuotesFormProps> = ({quoteToEdit, submitForm}) => {
+    const [form, setForm] = useState<IQuotesForm>({...initialState});
+
+    useEffect(() => {
+        if (quoteToEdit) {
+            setForm(prevState => ({
+                ...prevState,
+                ...quoteToEdit,
+            }));
+        }
+    }, [quoteToEdit]);
 
     const onChangeField = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -32,11 +45,10 @@ const QuotesForm = () => {
         e.preventDefault();
 
         try {
-            const postData = { ...form };
-            await axiosAPI.post('quotes.json', postData);
+            await submitForm(form);
             setForm(initialState);
-        } catch (e) {
-            console.error(e);
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -45,7 +57,7 @@ const QuotesForm = () => {
             <Typography
                 sx={{ mb: 2, textAlign: "center", color: "#000" }}
                 variant="h4"
-            > Add new quotes
+            > {quoteToEdit ? "Edit quote" : "Add new quote"}
             </Typography>
                 <form onSubmit={onSubmitForm}>
                     <Grid
@@ -112,7 +124,7 @@ const QuotesForm = () => {
                         </Grid>
                         <Grid size={12} sx={{ textAlign: "center" }}>
                             <Button size="large" type="submit" variant="contained">
-                                Add
+                                {quoteToEdit ? "Edit" : "Add"}
                             </Button>
                         </Grid>
                     </Grid>

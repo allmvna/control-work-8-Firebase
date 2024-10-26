@@ -3,6 +3,9 @@ import Grid from "@mui/material/Grid2";
 import axiosAPI from "../../axiosAPI.ts";
 import {useCallback, useEffect, useState} from "react";
 import {IQuote, IQuoteAPI} from "../../types";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import {NavLink} from "react-router-dom";
 
 
 const QuotesList = () => {
@@ -29,6 +32,15 @@ const QuotesList = () => {
     useEffect(() => {
         void fetchData();
     }, [fetchData]);
+
+    const deleteQuote = async (id: string) => {
+        try {
+            await axiosAPI.delete(`quotes/${id}.json`);
+            void fetchData();
+        } catch (e){
+            console.error(e);
+        }
+    };
 
     return (
         <>
@@ -73,14 +85,27 @@ const QuotesList = () => {
                                         Quote: {quote.description}
                                     </Typography>
                                 </CardContent>
-                                <CardActions sx={{ justifyContent: "center" }}>
+                                <CardActions sx={{ justifyContent: "flex-end" }}>
                                     <Button
+                                        component={NavLink}
+                                        to={`/quotes/${quote.id}/edit`}
                                         variant="contained"
                                         size="medium"
+                                        startIcon={<FormatListBulletedIcon />}
                                     >
-                                        Read more...
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        size="medium"
+                                        startIcon={<DeleteIcon />}
+                                        onClick={() => deleteQuote(quote.id)}
+                                    >
+                                        Delete
                                     </Button>
                                 </CardActions>
+
                             </Card>
                         </Grid>
                     ))}
